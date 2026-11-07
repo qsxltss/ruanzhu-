@@ -1,7 +1,5 @@
 #!/bin/bash
-
-export HF_ENDPOINT="https://hf-mirror.com"
-
+source "$(dirname "$0")/common.sh"
 GPUS="0,1"
 DATASET="mnli"
 MODEL="bert-base-cased"
@@ -16,9 +14,9 @@ while [[ "$#" -gt 0 ]]; do
     esac
     shift
 done
-
 python train/train.py \
     --gpus "$GPUS" \
     --dataset "$DATASET" \
     --model "$MODEL" \
-    --output_dir "$OUTPUT_DIR"
+    --output_dir "$OUTPUT_DIR" || exit 1
+finalize_checkpoint "$OUTPUT_DIR/$(model_dir_name "$MODEL")/$DATASET"

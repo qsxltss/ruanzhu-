@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export HF_ENDPOINT="https://hf-mirror.com"
+source "$(dirname "$0")/../scripts/common.sh"
 
 DATASET1="cifar_10"
 DATASET2="cifar_100"

@@ -117,7 +117,6 @@ def prepare_recover_data(model, trainset, batch_size, path, ratio=0.01):
     ## 计算并输出正确比例
     accuracy = correct / tot
     print(f"预测的label和真实label的正确比例: {accuracy:.4f}")
-    print(recover_data.keys())
     with open(path, "w") as f:
         json.dump(recover_data, f, indent=4)
     
@@ -137,7 +136,6 @@ def row_restore_perm(pre_model_mat, model_mat, threshold=0.0):
             success.append(perm[i])
     for i in range(len(restored_matrix)):
         if i not in success:
-            print(f"index{i} is not in success")
             restored_matrix[i] = pre_model_mat_cpu[i]
     restored_matrix = torch.from_numpy(restored_matrix).to(model_mat.device)
     return perm, success, restored_matrix

@@ -1,9 +1,7 @@
 #!/bin/bash
-
-export HF_ENDPOINT="https://hf-mirror.com"
-
-DATASET="sst2"
+source "$(dirname "$0")/../scripts/common.sh"
 GPUS="0,1"
-
-python code/evaluate_model_gpt2_xl.py --dataset "$DATASET" --gpus "$GPUS" 
-
+for DATASET in sst2; do
+    ./scripts/evaluate_gpt2_xl.sh --gpus "$GPUS" --dataset "$DATASET"
+done
+echo "所有脚本执行完毕！"

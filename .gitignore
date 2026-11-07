@@ -11,3 +11,5 @@ condaenv*
 aborted/
 
 tmp/
+logs/
+__pycache__/

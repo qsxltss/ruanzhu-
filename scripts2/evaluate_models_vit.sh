@@ -1,12 +1,6 @@
 #!/bin/bash
-
-export HF_ENDPOINT="https://hf-mirror.com"
-
-DATASET1="cifar_10"
-DATASET2="cifar_100"
-DATASET3="food101"
-
-python code/evaluate_model_vit.py --dataset "$DATASET1"
-python code/evaluate_model_vit.py --dataset "$DATASET2"
-python code/evaluate_model_vit.py --dataset "$DATASET3"
-
+source "$(dirname "$0")/../scripts/common.sh"
+for DATASET in cifar_10 cifar_100 food101; do
+    ./scripts/evaluate_vit.sh --dataset "$DATASET"
+done
+echo "所有脚本执行完毕！"

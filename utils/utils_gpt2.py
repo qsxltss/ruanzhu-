@@ -126,7 +126,6 @@ def row_restore_perm(pre_model_mat, model_mat, threshold=0.0):
             success.append(perm[i])
     for i in range(len(restored_matrix)):
         if i not in success:
-            print(f"index{i} is not in success")
             restored_matrix[i] = pre_model_mat_cpu[i]
     restored_matrix = torch.from_numpy(restored_matrix).to(model_mat.device)
     return perm, success, restored_matrix

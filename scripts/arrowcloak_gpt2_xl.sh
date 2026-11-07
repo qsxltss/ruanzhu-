@@ -1,8 +1,5 @@
 #!/bin/bash
-
-# 设置 Hugging Face 镜像地址
-export HF_ENDPOINT="https://hf-mirror.com"
-
+source "$(dirname "$0")/common.sh"
 GPUS="0,1"
 DATASET="sst2"
 WEIGHT_DIR="results/train_results"
@@ -17,8 +14,9 @@ while [[ "$#" -gt 0 ]]; do
     esac
     shift
 done
-
-python code/arrowcloak_gpt2_xl.py --gpus "$GPUS" \
+python code/arrowcloak_gpt2_xl.py \
+    --gpus "$GPUS" \
     --dataset "$DATASET" \
     --weight_dir "$WEIGHT_DIR" \
-    --restore_dir "$RESTORE_DIR" \
+    --restore_dir "$RESTORE_DIR" || exit 1
+finalize_checkpoint "$RESTORE_DIR/gpt2_xl/arrowcloak/$DATASET"

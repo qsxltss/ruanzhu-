@@ -1,7 +1,5 @@
 #!/bin/bash
-
-export HF_ENDPOINT="https://hf-mirror.com"
-
+source "$(dirname "$0")/common.sh"
 GPUS="0,1"
 DATASET="sst2"
 OUTPUT_DIR="results/train_results"
@@ -14,8 +12,8 @@ while [[ "$#" -gt 0 ]]; do
     esac
     shift
 done
-
 python train/train_gpt2_xl.py \
     --gpus "$GPUS" \
     --dataset "$DATASET" \
-    --output_dir "$OUTPUT_DIR"
+    --output_dir "$OUTPUT_DIR" || exit 1
+finalize_checkpoint "$OUTPUT_DIR/gpt2_xl/$DATASET"

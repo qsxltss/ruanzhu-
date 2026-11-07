@@ -103,8 +103,7 @@ def fine_tune(args):
         per_device_eval_batch_size=args.batch_size,
         num_train_epochs=args.epochs,
         weight_decay=args.weight_decay,
-        logging_dir="./logs",
-        logging_steps=100,
+        logging_strategy='epoch',
         dataloader_num_workers=8,
     )
 

@@ -1,12 +1,9 @@
 #!/bin/bash
-
-export HF_ENDPOINT="https://hf-mirror.com"
-
+source "$(dirname "$0")/common.sh"
 GPUS="0,1"
 DATASET="sst2"
 WEIGHT_DIR="results/train_results"
 RESTORE_DIR="results/arrowcloak_results"
-
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --gpus) GPUS="$2"; shift ;;
@@ -17,10 +14,9 @@ while [[ "$#" -gt 0 ]]; do
     esac
     shift
 done
-
-
 python code/arrowcloak_gpt2.py \
     --gpus "$GPUS" \
     --dataset "$DATASET" \
     --weight_dir "$WEIGHT_DIR" \
-    --restore_dir "$RESTORE_DIR" \
+    --restore_dir "$RESTORE_DIR" || exit 1
+finalize_checkpoint "$RESTORE_DIR/gpt2_base/arrowcloak/$DATASET"

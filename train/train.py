@@ -90,15 +90,14 @@ def fine_tune(args):
 
     training_args = TrainingArguments(
         output_dir=f"{args.output_dir}/{args.dataset}",
-        evaluation_strategy='epoch', 
+        eval_strategy='epoch',
         save_strategy="epoch", 
         learning_rate=args.lr,
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=args.batch_size,
         num_train_epochs=args.epochs,
         weight_decay=args.weight_decay,
-        logging_dir="./logs", 
-        logging_steps=100,  
+        logging_strategy='epoch',
         dataloader_num_workers=4,   
     )
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export HF_ENDPOINT="https://hf-mirror.com"
+source "$(dirname "$0")/../scripts/common.sh"
 
 GPUS="0,1"
 DATASET1="mnli"

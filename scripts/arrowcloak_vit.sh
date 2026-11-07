@@ -1,11 +1,8 @@
 #!/bin/bash
-
-export HF_ENDPOINT="https://hf-mirror.com"
-
+source "$(dirname "$0")/common.sh"
 DATASET="cifar_100"
 WEIGHT_DIR="results/train_results"
 RESTORE_DIR="results/arrowcloak_results"
-
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --dataset) DATASET="$2"; shift ;;
@@ -15,9 +12,7 @@ while [[ "$#" -gt 0 ]]; do
     esac
     shift
 done
-
-
 python code/arrowcloak_vit.py \
     --dataset "$DATASET" \
     --weight_dir "$WEIGHT_DIR" \
-    --restore_dir "$RESTORE_DIR" \
+    --restore_dir "$RESTORE_DIR" || exit 1

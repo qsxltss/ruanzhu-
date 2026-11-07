@@ -3,15 +3,32 @@ ENV_NAME="arrowcloak-env2"
 PYTHON_VERSION="3.9.18"
 CONDA_MIRROR="https://mirrors.tuna.tsinghua.edu.cn/anaconda"
 PYPI_MIRROR="https://pypi.tuna.tsinghua.edu.cn/simple"
+LOG_DIR="logs"
+mkdir -p "$LOG_DIR"
+LOG="$LOG_DIR/install2.log"
+: > "$LOG"
+
+# 执行一个安装步骤：详细输出写入日志，终端只显示步骤状态
+run_step() {
+    local msg="$1"; shift
+    printf "%s ... " "$msg"
+    if "$@" >> "$LOG" 2>&1; then
+        echo "完成"
+    else
+        echo "失败"
+        echo "最后 20 行日志如下（完整日志：$LOG）："
+        tail -n 20 "$LOG"
+        exit 1
+    fi
+}
 
 
-echo -e "\nCreating Conda Environment"
-conda create -n $ENV_NAME python=$PYTHON_VERSION -y
+
+run_step "[1/4] 创建 Conda 环境 $ENV_NAME（Python $PYTHON_VERSION）" conda create -q -n $ENV_NAME python=$PYTHON_VERSION -y
 source $(conda info --base)/etc/profile.d/conda.sh
 conda activate $ENV_NAME
 
-echo -e "\nInstalling Conda Packages"
-conda install -y \
+run_step "[2/4] 安装系统基础包" conda install -q -y \
   _libgcc_mutex=0.1=main \
   _openmp_mutex=5.1=1_gnu \
   ca-certificates=2024.7.2 \
@@ -28,10 +45,8 @@ conda install -y \
   zlib=1.2.13 \
   pip=23.3.1
 
-echo -e "\nInstalling Pip Packages "
-export PIP_PROGRESS_BAR=on
-pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 -f https://mirrors.aliyun.com/pytorch-wheels/cu113/
-pip install --retries 3 --timeout 120 -i $PYPI_MIRROR \
+run_step "[3/4] 安装 PyTorch 1.11.0（CUDA 11.3）" pip install -q --progress-bar off torch==1.11.0+cu113 torchvision==0.12.0+cu113 -f https://mirrors.aliyun.com/pytorch-wheels/cu113/
+run_step "[4/4] 安装 Python 依赖" pip install -q --progress-bar off --retries 3 --timeout 120 -i $PYPI_MIRROR \
   accelerate==0.27.2 \
   aiohttp==3.9.3 \
   aiosignal==1.3.1 \
@@ -122,3 +137,5 @@ pip install --retries 3 --timeout 120 -i $PYPI_MIRROR \
   wheel==0.41.2 \
   xxhash==3.4.1 \
   yarl==1.9.4
+echo "环境 $ENV_NAME 安装完成，安装日志：$LOG"
+echo "请执行：conda activate $ENV_NAME"

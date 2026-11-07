@@ -1,10 +1,7 @@
 #!/bin/bash
-
-export HF_ENDPOINT="https://hf-mirror.com"
-
+source "$(dirname "$0")/common.sh"
 DATASET="cifar_100"
 OUTPUT_DIR="results/train_results/ViT"
-
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --dataset) DATASET="$2"; shift ;;
@@ -13,7 +10,7 @@ while [[ "$#" -gt 0 ]]; do
     esac
     shift
 done
-
 python train/train_vit.py \
     --dataset "$DATASET" \
-    --output_dir "$OUTPUT_DIR"
+    --output_dir "$OUTPUT_DIR" || exit 1
+echo "最终模型已保存：$OUTPUT_DIR/$DATASET/ckpt.t7"

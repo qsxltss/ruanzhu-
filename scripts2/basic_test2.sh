@@ -1,12 +1,9 @@
-export HF_ENDPOINT="https://hf-mirror.com"
-
+#!/bin/bash
+source "$(dirname "$0")/../scripts/common.sh"
 DATASET="cifar_100"
-OUTPUT_DIR="results/train_results/ViT"
-WEIGHT_DIR="results/train_results"
-RESTORE_DIR="results/arrowcloak_results"
-
-./scripts/train_vit.sh --dataset $DATASET --output_dir $OUTPUT_DIR
-
-./scripts/arrowcloak_vit.sh  --dataset $DATASET --weight_dir $WEIGHT_DIR --restore_dir $RESTORE_DIR
-
+./scripts/check_env.sh || exit 1
+./scripts/train_vit.sh --dataset $DATASET || exit 1
+./scripts/recover_data.sh --model vit --dataset $DATASET || exit 1
+./scripts/arrowcloak_vit.sh --dataset $DATASET || exit 1
+./scripts/evaluate_vit.sh --dataset $DATASET || exit 1
 echo "Successfully finished basic test2"
